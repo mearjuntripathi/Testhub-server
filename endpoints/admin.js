@@ -13,7 +13,6 @@ async function signup(req, res) {
         const otp = getOTP(admin_id);
         const token = JWT.set({ otp: otp, admin_id: admin_id });
         sendLink(email, token, name, null, "admin");
-        console.log(token);
         return res.status(201).json({ message: "Go and verify your account you get a mail" });
     } catch (err) {
         if (err.message === 'Email already exists') {
@@ -113,7 +112,6 @@ async function forgetPassword(req, res) {
         }
         // send a mail
         sendOTP(email, otp);
-        console.log(otp);
         return res.sendStatus(200);
     } catch (error) {
         return res.status(500).json({ error: 'Internal Server Error' });

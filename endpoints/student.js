@@ -42,15 +42,26 @@ async function login(req, res) {
     }
 }
 
+function formatDate(date) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}${month}${day}`;
+}
+
+function formatDateWithDayName(dateString) {
+    const date = new Date(dateString.substring(0, 4), dateString.substring(4, 6) - 1, dateString.substring(6, 8));
+    const options = { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' };
+    return date.toLocaleDateString('en-US', options);
+}
+
 async function signup(req, res) {
     const test_id = req.query.test_id;
     const { name, email, resume_link, admin_id } = req.body;
 
     const today = new Date();
-    const year = today.getFullYear();
-    const month = String(today.getMonth() + 1).padStart(2, '0');
-    const day = String(today.getDate()).padStart(2, '0');
-    const date = `${year}-${month}-${day}`;
+    const formattedToday = formatDate(today);
+
     try {
         const admin = await database.adminExist(admin_id);
         if (!admin) {
@@ -60,7 +71,10 @@ async function signup(req, res) {
         if (!test) {
             return res.status(403).json({ error: 'No test exist' });
         }
-        if (test.test_date <= date) {
+        const testDate = new Date(test[0].test_date);
+        const formattedTestDate = formatDate(testDate);
+
+        if (formattedTestDate <= formattedToday) {
             return res.status(403).json({ error: 'Apply date expire' });
         }
 
@@ -74,8 +88,7 @@ async function signup(req, res) {
             const otp = getOTP(email);
             const token = JWT.set({ otp: otp, email: email, test_id: test_id });
             // send mail with token
-            sendLink(email, token, name, test.test_date, 'student')
-            console.log(token);
+            sendLink(email, token, name, formatDateWithDayName(formattedTestDate), 'student')
             res.status(200).json({ message: "Verify your accout to register for test" });
         } else {
             await database.updateStudents(name, email, resume_link, test_id);
@@ -88,6 +101,7 @@ async function signup(req, res) {
         if (error.message === 'Email already exists but not verified') {
             return res.status(409).json({ error: error.message });
         }
+        console.log(error);
         return res.status(500).json({ error: 'Internal Server Error' });
     }
 }

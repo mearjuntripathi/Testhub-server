@@ -75,7 +75,7 @@ async function testExist(test_id, admin_id) {
                 return reject(err);
             }
             if (result.length > 0) {
-                resolve(true);
+                resolve(result);
             } else {
                 resolve(false);
             }
