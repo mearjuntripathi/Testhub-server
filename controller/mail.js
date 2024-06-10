@@ -70,7 +70,7 @@ async function sendGreet(email, name, message, subject) {
             <div style="font-family: Arial, sans-serif; text-align: center; color: #333;">
                 <h2 style="color: #4CAF50;">Hello ${name},</h2>
                 <p>${message}</p>
-                <p>Best regards,<br/>Your Company</p>
+                <p>Best regards,<br/>TestHub</p>
             </div>
         `,
     };
