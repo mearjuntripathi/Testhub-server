@@ -24,13 +24,16 @@ async function sendOTP(email, otp) {
     }
 }
 
-async function sendLink(email, token, name, date, to) {
-    const url = process.env.ROOT_URL + `/${to}/auth/verify?token=${token}`;
+async function sendLink(email, token, name, { date, test_id }, to) {
+    const url = `${process.env.ROOT_URL}/${to}/auth/verify?token=${token}`;
     let message;
 
     // Customize message based on recipient type
     if (to === 'student') {
-        message = `You have applied for a test scheduled on ${date}. Click the button below to verify your email and complete the registration process.`;
+        message = `
+            You have applied for a test scheduled on ${date}. Click the button below to verify your email and complete the registration process.<br><br>
+            Please keep this Test ID: <strong>${test_id}</strong> for future reference. You will need to enter your email and this Test ID to log in for the test. The test will be available from 12:00 AM to 11:59 PM on the scheduled date.
+        `;
     } else if (to === 'admin') {
         message = `Hello ${name}, you have a new admin registration request. Click the button below to verify the email address of ${email}.`;
     } else {
@@ -61,7 +64,8 @@ async function sendLink(email, token, name, date, to) {
 }
 
 
-async function sendGreet(email, name, message, subject) {
+
+async function sendGreet(email, name, { message, test_id }, subject) {
     const mailOptions = {
         from: process.env.EMAIL_USER,
         to: email,
@@ -70,6 +74,7 @@ async function sendGreet(email, name, message, subject) {
             <div style="font-family: Arial, sans-serif; text-align: center; color: #333;">
                 <h2 style="color: #4CAF50;">Hello ${name},</h2>
                 <p>${message}</p>
+                <p>Keep this Test ID: <strong>${test_id}</strong> for future reference. You will need to enter your email and this Test ID to log in for the test. The test will be available from 12:00 AM to 11:59 PM on the scheduled date.</p>
                 <p>Best regards,<br/>TestHub</p>
             </div>
         `,
@@ -83,5 +88,6 @@ async function sendGreet(email, name, message, subject) {
         return false;
     }
 }
+
 
 module.exports = { sendOTP, sendLink, sendGreet };

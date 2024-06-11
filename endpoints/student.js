@@ -88,12 +88,12 @@ async function signup(req, res) {
             const otp = getOTP(email);
             const token = JWT.set({ otp: otp, email: email, test_id: test_id });
             // send mail with token
-            sendLink(email, token, name, formatDateWithDayName(formattedTestDate), 'student')
+            sendLink(email, token, name, { date: formatDateWithDayName(formattedTestDate), test_id }, 'student');
             res.status(200).json({ message: "Verify your accout to register for test" });
         } else {
             await database.updateStudents(name, email, resume_link, test_id);
             // send mail to congratulation for thay have sucessfully registered
-            sendGreet(email, name, `You have successfully registered for the test scheduled on ${test.test_date}.`, 'Successfully Registered');
+            sendGreet(email, name, { message: `You have successfully registered for the test scheduled on ${formatDateWithDayName(formattedTestDate)}.`, test_id }, 'Successfully Registered');
             return res.status(201).json({ message: "Your are joined" });
         }
 
