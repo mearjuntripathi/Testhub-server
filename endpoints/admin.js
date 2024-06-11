@@ -4,6 +4,8 @@ const database = require('../service/adminDatabase');
 const { sendOTP, sendLink } = require('../controller/mail');
 const fs = require('fs');
 const csv = require('csv-parser');
+const { Readable } = require('stream'); // Import Readable from the stream module
+
 
 async function signup(req, res) {
     const { name, email, password } = req.body;
@@ -24,7 +26,7 @@ async function signup(req, res) {
 
 async function verify(req, res) {
     const token = req.query.token;
-    
+
     if (!token) {
         return res.status(400).send(`
             <html>
@@ -161,9 +163,17 @@ async function createTest(req, res) {
     if (!req.file) {
         return res.status(400).json({ error: 'No file uploaded' });
     }
-    const filePath = req.file.path;
+
+    const fileBuffer = req.file.buffer;
     const results = [];
-    fs.createReadStream(filePath)
+
+    // Convert buffer to a readable stream
+    const readableFile = new Readable();
+    readableFile._read = () => { }; // _read is required but you can noop it
+    readableFile.push(fileBuffer);
+    readableFile.push(null);
+
+    readableFile
         .pipe(csv(['question', 'option1', 'option2', 'option3', 'option4', 'answer']))
         .on('data', (data) => results.push(data))
         .on('end', async () => {
@@ -187,12 +197,10 @@ async function createTest(req, res) {
             } catch (error) {
                 if (error.message === 'Test already exists') {
                     res.status(409).json({ error: 'You can create one test in one day' });
+                } else {
+                    res.status(500).json({ error: 'Internal Server Error' });
                 }
-                res.status(500).json({ error: 'Internal Server Error' });
-            } finally {
-                fs.unlinkSync(filePath); // Clean up the uploaded file
             }
-
         });
 }
 

@@ -40,3 +40,4 @@
 | IP: ::ffff:127.0.0.1 || Path: /student/auth/signup || Date: 2024-06-09T11:26:41.823Z |
 | IP: ::ffff:127.0.0.1 || Path: /student/auth/signup || Date: 2024-06-09T11:27:03.836Z |
 | IP: ::ffff:127.0.0.1 || Path: /student/auth/signup || Date: 2024-06-09T11:31:08.082Z |
+| IP: ::ffff:127.0.0.1 || Path: /admin/orginized-test || Date: 2024-06-11T07:15:23.954Z |

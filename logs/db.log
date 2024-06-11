@@ -64,3 +64,9 @@
     at addChunk (node:internal/streams/readable:559:12)
     at readableAddChunkPushByteMode (node:internal/streams/readable:510:3)
     at Readable.push (node:internal/streams/readable:390:5)
+2024-06-11T07:11:42.119Z - AggregateError [ETIMEDOUT]: 
+    at internalConnectMultiple (node:net:1116:18)
+    at internalConnectMultiple (node:net:1184:5)
+    at Timeout.internalConnectMultipleTimeout (node:net:1710:5)
+    at listOnTimeout (node:internal/timers:575:11)
+    at process.processTimers (node:internal/timers:514:7)
