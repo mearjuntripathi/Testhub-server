@@ -719,3 +719,20 @@ Authorization: Bearer encrypted_token
 This approach ensures secure handling of student information and actions through encrypted tokens passed in the request headers.
 
 
+```env
+DB_HOST=
+DB_USER=
+DB_PASSWORD=
+DB_NAME=
+DB_PORT=
+
+EMAIL_USER=
+EMAIL_PASS=z
+SECRET_KEY=
+
+FRONTEND_ADMIN_URL=
+FRONTEND_STUDENT_URL=
+PORT=5500
+
+ROOT_URL=http://localhost:5500
+```
