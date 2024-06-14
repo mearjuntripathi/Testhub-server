@@ -26,12 +26,16 @@ async function sendOTP(email, otp) {
 
 async function sendLink(email, token, name, { date, test_id }, to) {
     const url = `${process.env.ROOT_URL}/${to}/auth/verify?token=${token}`;
+    const loginUrl = `${process.env.FRONTEND_STUDENT_URL}/login`;
+
     let message;
 
     // Customize message based on recipient type
     if (to === 'student') {
         message = `
             You have applied for a test scheduled on ${date}. Click the button below to verify your email and complete the registration process.<br><br>
+            After compler varification process: <a href="${loginUrl}" style="display: inline-block; padding: 10px 20px; margin: 20px 0; font-size: 16px; color: white; background-color: #4CAF50; text-decoration: none; border-radius: 5px;">LOGIN</a>
+            <br><br>
             Please keep this Test ID: <strong>${test_id}</strong> for future reference. You will need to enter your email and this Test ID to log in for the test. The test will be available from 12:00 AM to 11:59 PM on the scheduled date.
         `;
     } else if (to === 'admin') {
@@ -66,6 +70,7 @@ async function sendLink(email, token, name, { date, test_id }, to) {
 
 
 async function sendGreet(email, name, { message, test_id }, subject) {
+    const url = `${process.env.FRONTEND_STUDENT_URL}/login`;
     const mailOptions = {
         from: process.env.EMAIL_USER,
         to: email,
@@ -75,6 +80,7 @@ async function sendGreet(email, name, { message, test_id }, subject) {
                 <h2 style="color: #4CAF50;">Hello ${name},</h2>
                 <p>${message}</p>
                 <p>Keep this Test ID: <strong>${test_id}</strong> for future reference. You will need to enter your email and this Test ID to log in for the test. The test will be available from 12:00 AM to 11:59 PM on the scheduled date.</p>
+                <a href="${url}" style="display: inline-block; padding: 10px 20px; margin: 20px 0; font-size: 16px; color: white; background-color: #4CAF50; text-decoration: none; border-radius: 5px;">LOGIN Page</a>
                 <p>Best regards,<br/>TestHub</p>
             </div>
         `,
